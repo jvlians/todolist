@@ -1,0 +1,34 @@
+
+<div>
+    <h2><span>Item</span> {{vm.item.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="dl-horizontal jh-entity-details">
+        <dt><span>Name</span></dt>
+        <dd>
+            <span>{{vm.item.name}}</span>
+        </dd>
+        <dt><span>Description</span></dt>
+        <dd>
+            <span>{{vm.item.description}}</span>
+        </dd>
+        <dt><span>Date Due</span></dt>
+        <dd>
+            <span>{{vm.item.dateDue | date:'medium'}}</span>
+        </dd>
+        <dt><span>Is Complete</span></dt>
+        <dd>
+            <span>{{vm.item.isComplete}}</span>
+        </dd>
+        <dt><span>Category</span></dt>
+        <dd>
+            <a ui-sref="category-detail({id:vm.item.category.id})">{{vm.item.category.name}}</a>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            onclick="window.history.back()"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span> Back</span>
+    </button>
+</div>

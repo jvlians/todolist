@@ -1,0 +1,30 @@
+{
+    "relationships": [
+        {
+            "relationshipName": "items",
+            "otherEntityName": "item",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "category"
+        },
+        {
+            "relationshipName": "owner",
+            "otherEntityName": "user",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "login"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "name",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "changelogDate": "20160614193747",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "category",
+    "pagination": "no"
+}
