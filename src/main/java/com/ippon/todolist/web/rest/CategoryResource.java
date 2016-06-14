@@ -1,8 +1,12 @@
 package com.ippon.todolist.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import com.ippon.todolist.config.JHipsterProperties;
 import com.ippon.todolist.domain.Category;
 import com.ippon.todolist.repository.CategoryRepository;
+import com.ippon.todolist.repository.UserRepository;
+import com.ippon.todolist.security.AuthoritiesConstants;
+import com.ippon.todolist.security.SecurityUtils;
 import com.ippon.todolist.web.rest.util.HeaderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
+import javax.validation.constraints.Null;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -27,10 +32,13 @@ import java.util.Optional;
 public class CategoryResource {
 
     private final Logger log = LoggerFactory.getLogger(CategoryResource.class);
-        
+
     @Inject
     private CategoryRepository categoryRepository;
-    
+
+    @Inject
+    private UserRepository userRepository;
+
     /**
      * POST  /categories : Create a new category.
      *
@@ -46,6 +54,10 @@ public class CategoryResource {
         log.debug("REST request to save Category : {}", category);
         if (category.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("category", "idexists", "A new category cannot already have an ID")).body(null);
+        }
+        if (!SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.ADMIN) || category.getOwner() == null) {
+            log.debug("Current user {} is non-admin or left user field blank, auto-filling user field");
+            category.setOwner(userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get());
         }
         Category result = categoryRepository.save(category);
         return ResponseEntity.created(new URI("/api/categories/" + result.getId()))
@@ -88,7 +100,13 @@ public class CategoryResource {
     @Timed
     public List<Category> getAllCategories() {
         log.debug("REST request to get all Categories");
-        List<Category> categories = categoryRepository.findAll();
+        List<Category> categories;
+        if (SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.ADMIN)) {
+            categories = categoryRepository.findAll();
+        }
+        else {
+            categories = categoryRepository.findByOwnerIsCurrentUser();
+        }
         return categories;
     }
 
