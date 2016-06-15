@@ -50,9 +50,15 @@
 
         <div class="form-group">
             <label for="field_category">Category</label>
-            <select class="form-control" id="field_category" name="category" ng-model="vm.item.category" ng-options="category as category.name for category in vm.categories track by category.id">
+            <select class="form-control" id="field_category" name="category" ng-model="vm.item.category" ng-options="category as category.name for category in vm.categories track by category.id" required>
                 <option value=""></option>
             </select>
+        </div>
+        <div ng-show="editForm.category.$invalid">
+            <p class="help-block"
+                ng-show="editForm.category.$error.required">
+                This field is required.
+            </p>
         </div>
     </div>
     <div class="modal-footer">

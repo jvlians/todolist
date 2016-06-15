@@ -4,6 +4,9 @@
             "relationshipName": "category",
             "otherEntityName": "category",
             "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
             "otherEntityField": "name"
         }
     ],

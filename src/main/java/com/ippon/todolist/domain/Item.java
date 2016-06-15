@@ -37,6 +37,7 @@ public class Item implements Serializable {
     private Boolean isComplete;
 
     @ManyToOne
+    @NotNull
     private Category category;
 
     public Long getId() {
