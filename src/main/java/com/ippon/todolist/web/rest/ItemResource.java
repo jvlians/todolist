@@ -27,10 +27,10 @@ import java.util.Optional;
 public class ItemResource {
 
     private final Logger log = LoggerFactory.getLogger(ItemResource.class);
-        
+
     @Inject
     private ItemRepository itemRepository;
-    
+
     /**
      * POST  /items : Create a new item.
      *
@@ -47,6 +47,7 @@ public class ItemResource {
         if (item.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("item", "idexists", "A new item cannot already have an ID")).body(null);
         }
+        item.setIsComplete(false);
         Item result = itemRepository.save(item);
         return ResponseEntity.created(new URI("/api/items/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert("item", result.getId().toString()))
